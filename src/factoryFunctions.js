@@ -67,6 +67,11 @@ function Gameboard() {
                 this.locations[row][column] = "x";
             }
         },
+        checkSinked() {
+            return this.ships.every((ship) => {
+                ship.sunk === true;
+            });
+        },
     };
 }
 
@@ -79,6 +84,53 @@ function createGrid() {
         }
     }
     return a;
+}
+
+function createPlayer() {
+    const gameboard = Gameboard();
+    return {
+        gameboard: gameboard,
+        turn: true,
+        attack(row, column) {
+            return { atkRow: row, atkColumn: column };
+        },
+    };
+}
+
+function AI() {
+    const gameboard = Gameboard();
+    const oponentGrid = createGrid();
+    gameboard.placeShip(4, 2, 3);
+    gameboard.placeShip(2, 0, 0);
+    return {
+        gameboard: gameboard,
+        markedLocations: oponentGrid,
+        doMove() {
+            let moves = generateMove();
+            if (this.markedLocations[moves.row][moves.column] === 0) {
+                this.markedLocations[moves.row][moves.column] = "x";
+                return moves;
+            } else {
+                this.doMove();
+            }
+        },
+    };
+}
+
+function generateMove() {
+    const row = Math.floor(Math.random() * 15);
+    const column = Math.floor(Math.random() * 15);
+    return { row: row, column: column };
+}
+
+function main() {
+    const computer = AI();
+    const player = createPlayer();
+    const move = computer.doMove();
+    player.gameboard.receiveAttack(move.row, move.column);
+    console.log(player);
+    computer.gameboard.receiveAttack(0, 0);
+    console.log(computer);
 }
 
 module.exports = { createShip };
