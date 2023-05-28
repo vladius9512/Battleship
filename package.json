@@ -1,0 +1,25 @@
+{
+    "name": "battleship",
+    "version": "1.0.0",
+    "description": "Battleship game project",
+    "main": "index.js",
+    "scripts": {
+        "test": "jest",
+        "build": "webpack"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/vladius9512/Battleship.git"
+    },
+    "author": "vladius9512",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/vladius9512/Battleship/issues"
+    },
+    "homepage": "https://github.com/vladius9512/Battleship#readme",
+    "devDependencies": {
+        "jest": "^29.5.0",
+        "webpack": "^5.84.1",
+        "webpack-cli": "^5.1.1"
+    }
+}
