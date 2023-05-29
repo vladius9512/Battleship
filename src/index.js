@@ -1,4 +1,3 @@
-import { newGameUI, createBoard } from "./DOM";
+import { newGameUI } from "./DOM";
 
 newGameUI();
-createBoard();
