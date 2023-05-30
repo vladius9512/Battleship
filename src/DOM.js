@@ -1,8 +1,9 @@
-const { Gameboard } = require("./factoryFunctions");
+const { Gameboard, AI } = require("./factoryFunctions");
 
 export const mainElem = document.getElementsByTagName("main")[0];
 
 let playerBoard = Gameboard();
+let computer = AI();
 let dragged;
 
 function createElement(elemType, className) {
@@ -58,9 +59,10 @@ function drawBoard() {
             );
             square.addEventListener("drop", (e) => {
                 e.preventDefault();
-                if (boardMatrix[i][j] === 1) return;
+                if (boardMatrix[i][j] === 1) {
+                    return;
+                }
                 if (dragged.dataset.placed === "on") return;
-                dragged.dataset.placed = "on";
                 let shipLength = dragged.children.length;
                 const boatDirection = dragged.dataset.horizontal;
                 if (j + shipLength - 1 > 10 && boatDirection === "on") {
@@ -70,15 +72,11 @@ function drawBoard() {
                     return;
                 }
                 if (boatDirection === "on") {
-                    while (shipLength != 0) {
-                        boardMatrix[i][j + shipLength - 1] = 1;
-                        shipLength--;
-                    }
+                    dragged.dataset.placed = "on";
+                    playerBoard.placeShip(shipLength, i, j, false);
                 } else {
-                    while (shipLength != 0) {
-                        boardMatrix[i + shipLength - 1][j] = 1;
-                        shipLength--;
-                    }
+                    dragged.dataset.placed = "on";
+                    playerBoard.placeShip(shipLength, i, j, true);
                 }
                 div.innerHTML = "";
                 drawBoard();
@@ -88,23 +86,6 @@ function drawBoard() {
         div.appendChild(row);
     }
     mainElem.appendChild(div);
-}
-
-function placeBoatsStartGame() {
-    const div = createElement("div", "boats-container");
-    const carrier = createBoat(5, "ship-container");
-    const battleship = createBoat(4, "ship-container");
-    const cruiser = createBoat(3, "ship-container");
-    const destroyer = createBoat(2, "ship-container");
-    const startGame = createElement("div", "start-game-container");
-    const startGameBtn = createElement("button", "start-game");
-    startGameBtn.innerText = "Start Game";
-    startGameBtn.addEventListener("click", () => {
-        console.log("Starting game");
-    });
-    startGame.appendChild(startGameBtn);
-    div.append(carrier, battleship, cruiser, destroyer);
-    mainElem.append(div, startGame);
 }
 
 function createBoat(length, boatName) {
@@ -128,4 +109,46 @@ function createBoat(length, boatName) {
         }
     });
     return boatDiv;
+}
+
+function placeBoatsStartGame() {
+    const div = createElement("div", "boats-container");
+    const carrier = createBoat(5, "ship-container");
+    const battleship = createBoat(4, "ship-container");
+    const cruiser = createBoat(3, "ship-container");
+    const destroyer = createBoat(2, "ship-container");
+    const startGame = createElement("div", "start-game-container");
+    const startGameBtn = createElement("button", "start-game");
+    startGameBtn.innerText = "Start Game";
+    startGameBtn.id = "start-game";
+    startGameBtn.addEventListener("click", () => {
+        if (playerBoard.ships.length != 4) return;
+        else generatePlayerAndAIBoards();
+    });
+    startGame.appendChild(startGameBtn);
+    div.append(carrier, battleship, cruiser, destroyer);
+    mainElem.append(div, startGame);
+}
+
+function drawAIBoard() {
+    const div = createElement("div", "computer-board");
+    const boardMatrix = computer.gameboard.locations;
+    for (let i = 0; i < boardMatrix.length; i++) {
+        const row = createElement("div", "row");
+        for (let j = 0; j < boardMatrix.length; j++) {
+            const square = createElement("div", "square");
+            row.appendChild(square);
+        }
+        div.appendChild(row);
+    }
+    mainElem.appendChild(div);
+}
+
+function generatePlayerAndAIBoards() {
+    const versus = createElement("p");
+    versus.innerText = "vs";
+    resetMain();
+    drawBoard();
+    mainElem.appendChild(versus);
+    drawAIBoard();
 }

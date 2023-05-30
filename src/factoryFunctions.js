@@ -102,6 +102,8 @@ function AI() {
     const oponentGrid = createGrid();
     gameboard.placeShip(4, 2, 3);
     gameboard.placeShip(2, 0, 0);
+    gameboard.placeShip(5, 9, 0);
+    gameboard.placeShip(3, 5, 5, true);
     return {
         gameboard: gameboard,
         markedLocations: oponentGrid,
@@ -133,4 +135,4 @@ function main() {
     console.log(computer);
 }
 
-module.exports = { createShip, Gameboard };
+module.exports = { createShip, Gameboard, AI };
