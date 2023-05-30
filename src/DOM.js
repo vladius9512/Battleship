@@ -15,7 +15,7 @@ export function newGameUI() {
     h2.addEventListener("click", () => {
         resetMain();
         createBoard();
-        createBoats();
+        placeBoatsStartGame();
     });
     const creditsDiv = createElement("div", "credits");
     const p = createElement("p");
@@ -58,13 +58,19 @@ export function createBoard() {
                 const rowArr = selectedSquare.parentElement.children;
                 const selectedSquareRow = selectedSquare.dataset.row;
                 const selectedSquareColumn = selectedSquare.dataset.col;
+                if (Number(selectedSquareColumn) + 3 > 9) {
+                    return;
+                }
                 let holder = [];
                 for (const elem of rowArr) {
                     const elemRow = elem.dataset.row;
                     const elemCol = elem.dataset.col;
                     if (
                         elemCol >= selectedSquareColumn &&
-                        elemCol <= dragged.children.length - 1
+                        elemCol <=
+                            Number(selectedSquareColumn) +
+                                Number(dragged.children.length) -
+                                1
                     ) {
                         holder.push({ div: elem, col: elemCol });
                     }
@@ -89,22 +95,40 @@ export function createBoard() {
     mainElem.appendChild(div);
 }
 
-function createBoats() {
+function placeBoatsStartGame() {
     const div = createElement("div", "boats-container");
-    const boatDiv = createElement("div", "carrier-container");
+    const carrier = createBoat(5, "ship-container");
+    const battleship = createBoat(4, "ship-container");
+    const cruiser = createBoat(3, "ship-container");
+    const destroyer = createBoat(2, "ship-container");
+    const startGame = createElement("div", "start-game-container");
+    const startGameBtn = createElement("button", "start-game");
+    startGameBtn.innerText = "Start Game";
+    startGameBtn.addEventListener("click", () => {
+        console.log("Starting game");
+    });
+    startGame.appendChild(startGameBtn);
+    div.append(carrier, battleship, cruiser, destroyer);
+    mainElem.append(div, startGame);
+}
+
+function createBoat(length, boatName) {
+    const boatDiv = createElement("div", boatName);
+    boatDiv.dataset.horizontal = "on";
     boatDiv.draggable = "true";
     boatDiv.addEventListener("drag", () => {
         dragged = boatDiv;
     });
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < length; i++) {
         const boatPart = createElement("div", "boat-part");
         boatDiv.appendChild(boatPart);
     }
     boatDiv.addEventListener("click", () => {
-        console.log("a");
+        if (boatDiv.dataset.horizontal === "on") {
+            boatDiv.dataset.horizontal = "off";
+        } else {
+            boatDiv.dataset.horizontal = "on";
+        }
     });
-    div.append(boatDiv);
-    mainElem.appendChild(div);
+    return boatDiv;
 }
-
-function boardSetUp() {}
