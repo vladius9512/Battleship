@@ -26,6 +26,15 @@ body {
     margin: 3px;
 }
 
-.carrier-container {
+.boats-container {
     display: flex;
+    justify-content: space-between;
+}
+
+.ship-container[data-horizontal="on"] {
+    display: flex;
+}
+
+.ship-container[data-horizontal="off"] {
+    display: inline-block;
 }
