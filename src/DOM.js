@@ -1,5 +1,8 @@
+const { Gameboard } = require("./factoryFunctions");
+
 export const mainElem = document.getElementsByTagName("main")[0];
 
+let playerBoard = Gameboard();
 let dragged;
 
 function createElement(elemType, className) {
@@ -14,8 +17,8 @@ export function newGameUI() {
     h2.innerText = "New Game";
     h2.addEventListener("click", () => {
         resetMain();
-        createBoard();
         placeBoatsStartGame();
+        drawBoard();
     });
     const creditsDiv = createElement("div", "credits");
     const p = createElement("p");
@@ -36,14 +39,16 @@ function resetMain() {
     mainElem.innerHTML = "";
 }
 
-export function createBoard() {
+function drawBoard() {
     const div = createElement("div", "player-board");
-    for (let i = 0; i < 10; i++) {
+    const boardMatrix = playerBoard.locations;
+    for (let i = 0; i < boardMatrix.length; i++) {
         const row = createElement("div", "row");
-        for (let j = 0; j < 10; j++) {
+        for (let j = 0; j < boardMatrix.length; j++) {
             const square = createElement("div", "square");
-            square.dataset.row = i;
-            square.dataset.col = j;
+            if (boardMatrix[i][j] === 1) {
+                square.classList.add("ship");
+            }
             square.addEventListener(
                 "dragover",
                 (e) => {
@@ -53,40 +58,30 @@ export function createBoard() {
             );
             square.addEventListener("drop", (e) => {
                 e.preventDefault();
-                const selectedSquare = e.target;
-                const row = selectedSquare.parentElement;
-                const rowArr = selectedSquare.parentElement.children;
-                const selectedSquareRow = selectedSquare.dataset.row;
-                const selectedSquareColumn = selectedSquare.dataset.col;
-                if (Number(selectedSquareColumn) + 3 > 9) {
+                if (boardMatrix[i][j] === 1) return;
+                if (dragged.dataset.placed === "on") return;
+                dragged.dataset.placed = "on";
+                let shipLength = dragged.children.length;
+                const boatDirection = dragged.dataset.horizontal;
+                if (j + shipLength - 1 > 10 && boatDirection === "on") {
                     return;
                 }
-                let holder = [];
-                for (const elem of rowArr) {
-                    const elemRow = elem.dataset.row;
-                    const elemCol = elem.dataset.col;
-                    if (
-                        elemCol >= selectedSquareColumn &&
-                        elemCol <=
-                            Number(selectedSquareColumn) +
-                                Number(dragged.children.length) -
-                                1
-                    ) {
-                        holder.push({ div: elem, col: elemCol });
+                if (i + shipLength - 1 > 10 && boatDirection === "off") {
+                    return;
+                }
+                if (boatDirection === "on") {
+                    while (shipLength != 0) {
+                        boardMatrix[i][j + shipLength - 1] = 1;
+                        shipLength--;
+                    }
+                } else {
+                    while (shipLength != 0) {
+                        boardMatrix[i + shipLength - 1][j] = 1;
+                        shipLength--;
                     }
                 }
-                row.insertBefore(dragged, selectedSquare);
-                const draggedChildren = dragged.children;
-                let i = 0;
-                for (const elem of holder) {
-                    draggedChildren[i].dataset.row = selectedSquareRow;
-                    draggedChildren[i].dataset.col = elem.col;
-                    i++;
-                    row.removeChild(elem.div);
-                }
-            });
-            square.addEventListener("click", () => {
-                //attack probably;
+                div.innerHTML = "";
+                drawBoard();
             });
             row.appendChild(square);
         }
@@ -115,6 +110,7 @@ function placeBoatsStartGame() {
 function createBoat(length, boatName) {
     const boatDiv = createElement("div", boatName);
     boatDiv.dataset.horizontal = "on";
+    boatDiv.dataset.placed = "off";
     boatDiv.draggable = "true";
     boatDiv.addEventListener("drag", () => {
         dragged = boatDiv;
@@ -124,6 +120,7 @@ function createBoat(length, boatName) {
         boatDiv.appendChild(boatPart);
     }
     boatDiv.addEventListener("click", () => {
+        if (boatDiv.dataset.placed === "on") return;
         if (boatDiv.dataset.horizontal === "on") {
             boatDiv.dataset.horizontal = "off";
         } else {

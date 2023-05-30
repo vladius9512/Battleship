@@ -15,6 +15,10 @@ body {
     margin: 3px;
 }
 
+.square.ship {
+    background-color: rgba(255, 0, 0, 0.501);
+}
+
 .row {
     display: flex;
 }
@@ -37,4 +41,14 @@ body {
 
 .ship-container[data-horizontal="off"] {
     display: inline-block;
+}
+
+.ship-container[data-horizontal="on"][data-placed="on"] {
+    display: flex;
+    opacity: 0.2;
+}
+
+.ship-container[data-horizontal="off"][data-placed="on"] {
+    display: inline-block;
+    opacity: 0.2;
 }

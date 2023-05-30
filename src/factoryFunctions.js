@@ -20,6 +20,17 @@ function createShip({ length, hits, sunk, row, col }) {
     };
 }
 
+function createGrid() {
+    let a = [];
+    for (let i = 0; i < 10; i++) {
+        a[i] = [];
+        for (let j = 0; j < 10; j++) {
+            a[i][j] = 0;
+        }
+    }
+    return a;
+}
+
 function Gameboard() {
     return {
         locations: createGrid(),
@@ -75,17 +86,6 @@ function Gameboard() {
     };
 }
 
-function createGrid() {
-    let a = [];
-    for (let i = 0; i < 10; i++) {
-        a[i] = [];
-        for (let j = 0; j < 10; j++) {
-            a[i][j] = 0;
-        }
-    }
-    return a;
-}
-
 function createPlayer() {
     const gameboard = Gameboard();
     return {
@@ -133,4 +133,4 @@ function main() {
     console.log(computer);
 }
 
-module.exports = { createShip };
+module.exports = { createShip, Gameboard };
