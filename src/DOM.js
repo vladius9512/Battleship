@@ -172,15 +172,18 @@ function drawAIBoard() {
             square.addEventListener("click", () => {
                 if (attacked) return;
                 computer.gameboard.receiveAttack(i, j);
+                if (computer.gameboard.checkSinked()) alert("game won");
+                if (playerBoard.checkSinked()) alert("you lost");
                 if (boardMatrix[i][j] === 1) {
                     square.classList.add("hit");
-                    console.log(computer);
                 } else {
                     square.classList.add("miss");
                 }
                 attacked = true;
+                updateShipsAlive(computer.gameboard.remainingShips());
                 const move = computer.doMove();
                 playerBoard.receiveAttack(move.row, move.column);
+                updatePlayerBoard();
             });
         }
         div.appendChild(row);
@@ -188,11 +191,43 @@ function drawAIBoard() {
     mainElem.appendChild(div);
 }
 
+function updateShipsAlive(remainingShips) {
+    const div = document.getElementById("ships-alive");
+    div.firstChild.innerText = remainingShips;
+}
+
+function updatePlayerBoard() {
+    const div = createElement("div", "player-board");
+    const boardMatrix = playerBoard.locations;
+    for (let i = 0; i < boardMatrix.length; i++) {
+        const row = createElement("div", "row");
+        for (let j = 0; j < boardMatrix.length; j++) {
+            const square = createElement("div", "square");
+            if (boardMatrix[i][j] === 1) {
+                square.classList.add("ship");
+            }
+            if (boardMatrix[i][j] === "x") {
+                square.classList.add("miss");
+            }
+            row.appendChild(square);
+        }
+        div.appendChild(row);
+    }
+    mainElem.insertBefore(div, mainElem.children[0]);
+    mainElem.removeChild(mainElem.children[1]);
+}
+
 function generatePlayerAndAIBoards() {
     const versus = createElement("p");
+    const div = createElement("div");
+    div.id = "ships-alive";
+    const shipText = createElement("p");
+    shipText.innerText = computer.gameboard.remainingShips();
+    div.appendChild(shipText);
     versus.innerText = "vs";
     resetMain();
     drawBoard();
     mainElem.appendChild(versus);
     drawAIBoard();
+    mainElem.appendChild(div);
 }

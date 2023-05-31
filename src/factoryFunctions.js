@@ -80,8 +80,11 @@ function Gameboard() {
         },
         checkSinked() {
             return this.ships.every((ship) => {
-                ship.sunk === true;
+                return ship.sunk === true;
             });
+        },
+        remainingShips() {
+            return this.ships.filter(({ sunk }) => sunk === false).length;
         },
     };
 }
