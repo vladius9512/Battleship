@@ -62,13 +62,43 @@ function drawBoard() {
                 if (boardMatrix[i][j] === 1) {
                     return;
                 }
+                if (i != 0 && j != 0) {
+                    if (boardMatrix[i - 1][j - 1] === 1) {
+                        return;
+                    }
+                }
+                if (i != 9 && j != 9) {
+                    if (boardMatrix[i + 1][j + 1] === 1) {
+                        return;
+                    }
+                }
+                if (i != 0) {
+                    if (boardMatrix[i - 1][j] === 1) {
+                        return;
+                    }
+                }
+                if (i != 9) {
+                    if (boardMatrix[i + 1][j] === 1) {
+                        return;
+                    }
+                }
+                if (j != 0) {
+                    if (boardMatrix[i][j - 1] === 1) {
+                        return;
+                    }
+                }
+                if (j != 9) {
+                    if (boardMatrix[i][j + 1] === 1) {
+                        return;
+                    }
+                }
                 if (dragged.dataset.placed === "on") return;
                 let shipLength = dragged.children.length;
                 const boatDirection = dragged.dataset.horizontal;
-                if (j + shipLength - 1 > 10 && boatDirection === "on") {
+                if (j + shipLength > 10 && boatDirection === "on") {
                     return;
                 }
-                if (i + shipLength - 1 > 10 && boatDirection === "off") {
+                if (i + shipLength > 10 && boatDirection === "off") {
                     return;
                 }
                 if (boatDirection === "on") {
@@ -138,6 +168,20 @@ function drawAIBoard() {
         for (let j = 0; j < boardMatrix.length; j++) {
             const square = createElement("div", "square");
             row.appendChild(square);
+            let attacked = false;
+            square.addEventListener("click", () => {
+                if (attacked) return;
+                computer.gameboard.receiveAttack(i, j);
+                if (boardMatrix[i][j] === 1) {
+                    square.classList.add("hit");
+                    console.log(computer);
+                } else {
+                    square.classList.add("miss");
+                }
+                attacked = true;
+                const move = computer.doMove();
+                playerBoard.receiveAttack(move.row, move.column);
+            });
         }
         div.appendChild(row);
     }

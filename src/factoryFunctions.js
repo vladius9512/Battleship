@@ -120,8 +120,8 @@ function AI() {
 }
 
 function generateMove() {
-    const row = Math.floor(Math.random() * 15);
-    const column = Math.floor(Math.random() * 15);
+    const row = Math.floor(Math.random() * 9);
+    const column = Math.floor(Math.random() * 9);
     return { row: row, column: column };
 }
 
