@@ -1,3 +1,3 @@
-import { newGameUI } from "./DOM";
+import { newGameUI } from "./DOM.js";
 
 newGameUI();

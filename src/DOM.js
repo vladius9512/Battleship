@@ -1,6 +1,7 @@
-const { Gameboard, AI } = require("./factoryFunctions");
+//const { Gameboard, AI } = require("./factoryFunctions");
+import { Gameboard, AI } from "./factoryFunctions.js";
 
-export const mainElem = document.getElementsByTagName("main")[0];
+const mainElem = document.getElementsByTagName("main")[0];
 
 let playerBoard = Gameboard();
 let computer = AI();
@@ -59,6 +60,7 @@ function drawBoard() {
             );
             square.addEventListener("drop", (e) => {
                 e.preventDefault();
+                let shipLength = dragged.children.length;
                 if (boardMatrix[i][j] === 1) {
                     return;
                 }
@@ -73,27 +75,43 @@ function drawBoard() {
                     }
                 }
                 if (i != 0) {
-                    if (boardMatrix[i - 1][j] === 1) {
-                        return;
+                    for (let k = i; k < i + shipLength - 1; k++) {
+                        console.log(i);
+                        if (boardMatrix[i - 1][k] === 1) {
+                            console.log(i, k);
+                            console.log("a");
+                            return;
+                        }
                     }
                 }
                 if (i != 9) {
-                    if (boardMatrix[i + 1][j] === 1) {
-                        return;
+                    for (let k = i; k < i + shipLength - 1; k++) {
+                        if (boardMatrix[k + 1][j] === 1) {
+                            console.log(k + 1, j);
+                            console.log("b");
+                            return;
+                        }
                     }
                 }
                 if (j != 0) {
-                    if (boardMatrix[i][j - 1] === 1) {
-                        return;
+                    for (let k = j; k < j + shipLength - 1; k++) {
+                        if (boardMatrix[i][k + 1] === 1) {
+                            console.log(i, k + 1);
+                            console.log("c");
+                            return;
+                        }
                     }
                 }
                 if (j != 9) {
-                    if (boardMatrix[i][j + 1] === 1) {
-                        return;
+                    for (let k = j; k < j + shipLength - 1; k++) {
+                        if (boardMatrix[i][k - 1] === 1) {
+                            console.log(i, k - 1);
+                            console.log("d");
+                            return;
+                        }
                     }
                 }
                 if (dragged.dataset.placed === "on") return;
-                let shipLength = dragged.children.length;
                 const boatDirection = dragged.dataset.horizontal;
                 if (j + shipLength > 10 && boatDirection === "on") {
                     return;

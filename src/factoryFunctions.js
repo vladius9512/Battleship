@@ -31,7 +31,7 @@ function createGrid() {
     return a;
 }
 
-function Gameboard() {
+export function Gameboard() {
     return {
         locations: createGrid(),
         ships: [],
@@ -100,7 +100,7 @@ function createPlayer() {
     };
 }
 
-function AI() {
+export function AI() {
     const gameboard = Gameboard();
     const oponentGrid = createGrid();
     gameboard.placeShip(4, 2, 3);
@@ -116,7 +116,7 @@ function AI() {
                 this.markedLocations[moves.row][moves.column] = "x";
                 return moves;
             } else {
-                this.doMove();
+                return this.doMove();
             }
         },
     };
@@ -138,4 +138,4 @@ function main() {
     console.log(computer);
 }
 
-module.exports = { createShip, Gameboard, AI };
+//module.exports = {Gameboard, AI, createShip};
