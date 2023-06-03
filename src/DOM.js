@@ -1,4 +1,5 @@
 const { Gameboard, AI } = require("./factoryFunctions");
+const { checkSquaresHorizontal, checkSquaresVertical } = require("./utils");
 //import { Gameboard, AI } from "./factoryFunctions.js";
 
 const mainElem = document.getElementsByTagName("main")[0];
@@ -75,41 +76,24 @@ function drawBoard() {
                         return;
                     }
                 }
-                if (i != 0) {
-                    for (let k = i; k < i + shipLength - 1; k++) {
-                        console.log(i);
-                        if (boardMatrix[i - 1][k] === 1) {
-                            console.log(i, k);
-                            console.log("a");
-                            return;
-                        }
+                if (dragged.dataset.horizontal === "on") {
+                    console.log(shipLength);
+                    if (
+                        checkSquaresHorizontal(
+                            boardMatrix,
+                            i,
+                            shipLength,
+                            j
+                        ) === false
+                    ) {
+                        return;
                     }
-                }
-                if (i != 9) {
-                    for (let k = i; k < i + shipLength - 1; k++) {
-                        if (boardMatrix[k + 1][j] === 1) {
-                            console.log(k + 1, j);
-                            console.log("b");
-                            return;
-                        }
-                    }
-                }
-                if (j != 0) {
-                    for (let k = j; k < j + shipLength - 1; k++) {
-                        if (boardMatrix[i][k + 1] === 1) {
-                            console.log(i, k + 1);
-                            console.log("c");
-                            return;
-                        }
-                    }
-                }
-                if (j != 9) {
-                    for (let k = j; k < j + shipLength - 1; k++) {
-                        if (boardMatrix[i][k - 1] === 1) {
-                            console.log(i, k - 1);
-                            console.log("d");
-                            return;
-                        }
+                } else {
+                    if (
+                        checkSquaresVertical(boardMatrix, j, shipLength, i) ===
+                        false
+                    ) {
+                        return;
                     }
                 }
                 if (dragged.dataset.placed === "on") return;
