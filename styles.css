@@ -51,12 +51,6 @@ h2 {
     transition: all 0.3s ease-in-out;
 }
 
-h2:hover {
-    cursor: pointer;
-    color: var(--mustard-miss);
-    transform: scale(1.1);
-}
-
 a {
     transition: all 0.3s ease-in-out;
 }
@@ -92,11 +86,6 @@ a:hover {
     transition: all 0.3s ease-in-out;
 }
 
-#start-game:hover {
-    cursor: pointer;
-    color: var(--mustard-miss);
-    background-color: var(--purple);
-}
 .square {
     width: 20px;
     height: 20px;
@@ -213,8 +202,65 @@ a:hover {
     transition: all 0.3s ease-in-out;
 }
 
-.play-again:hover {
-    cursor: pointer;
-    background-color: var(--red-hit);
-    color: var(--beige);
+@media screen and (min-width: 700px) {
+    main {
+        flex-direction: row;
+    }
+    .boats-container {
+        overflow: unset;
+        height: unset;
+    }
+    .start-game-container {
+        margin: 0 1rem;
+    }
+    #start-game {
+        padding: 0.3rem 3rem;
+    }
+    .play-again:hover {
+        cursor: pointer;
+        background-color: var(--red-hit);
+        color: var(--beige);
+    }
+    #start-game:hover {
+        cursor: pointer;
+        color: var(--mustard-miss);
+        background-color: var(--purple);
+    }
+    h2:hover {
+        cursor: pointer;
+        color: var(--mustard-miss);
+        transform: scale(1.1);
+    }
+    .player-board {
+        margin-bottom: unset;
+        margin-right: 1rem;
+    }
+    .computer-board {
+        margin-top: unset;
+        margin-left: 1rem;
+    }
+    #ships-alive {
+        position: fixed;
+        bottom: 10%;
+        left: calc(55% - 191px);
+    }
+    .square {
+        width: 25px;
+        height: 25px;
+    }
+    .boat-part {
+        width: 25px;
+        height: 25px;
+    }
+}
+
+@media screen and (min-width: 1080px) {
+    .square {
+        width: 30px;
+        height: 30px;
+    }
+    .boat-part {
+        width: 30px;
+        height: 30px;
+    }
 }
