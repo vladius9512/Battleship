@@ -1,7 +1,8 @@
-//const { Gameboard, AI } = require("./factoryFunctions");
-import { Gameboard, AI } from "./factoryFunctions.js";
+const { Gameboard, AI } = require("./factoryFunctions");
+//import { Gameboard, AI } from "./factoryFunctions.js";
 
 const mainElem = document.getElementsByTagName("main")[0];
+const overlay = document.getElementsByClassName("overlay")[0];
 
 let playerBoard = Gameboard();
 let computer = AI();
@@ -9,7 +10,7 @@ let dragged;
 
 function createElement(elemType, className) {
     const elem = document.createElement(elemType);
-    elem.classList.add(className);
+    if (className !== undefined) elem.classList.add(className);
     return elem;
 }
 
@@ -128,6 +129,7 @@ function drawBoard() {
                 }
                 div.innerHTML = "";
                 drawBoard();
+                mainElem.removeChild(mainElem.children[2]);
             });
             row.appendChild(square);
         }
@@ -190,15 +192,20 @@ function drawAIBoard() {
             square.addEventListener("click", () => {
                 if (attacked) return;
                 computer.gameboard.receiveAttack(i, j);
-                if (computer.gameboard.checkSinked()) alert("game won");
-                if (playerBoard.checkSinked()) alert("you lost");
+                if (computer.gameboard.checkSinked())
+                    endGameScreen("You won the game!");
+                if (playerBoard.checkSinked())
+                    endGameScreen("Computer won! Try again!");
                 if (boardMatrix[i][j] === 1) {
                     square.classList.add("hit");
                 } else {
                     square.classList.add("miss");
                 }
                 attacked = true;
-                updateShipsAlive(computer.gameboard.remainingShips());
+                updateShipsAlive(
+                    computer.gameboard.remainingShips(),
+                    playerBoard.remainingShips()
+                );
                 const move = computer.doMove();
                 playerBoard.receiveAttack(move.row, move.column);
                 updatePlayerBoard();
@@ -209,9 +216,10 @@ function drawAIBoard() {
     mainElem.appendChild(div);
 }
 
-function updateShipsAlive(remainingShips) {
+function updateShipsAlive(remainingShipsComp, remainingShipsPlayer) {
     const div = document.getElementById("ships-alive");
-    div.firstChild.innerText = remainingShips;
+    div.firstChild.innerText = `Computer has ${remainingShipsComp} ships alive`;
+    div.children[1].innerText = `You have ${remainingShipsPlayer} ships alive`;
 }
 
 function updatePlayerBoard() {
@@ -240,12 +248,34 @@ function generatePlayerAndAIBoards() {
     const div = createElement("div");
     div.id = "ships-alive";
     const shipText = createElement("p");
-    shipText.innerText = computer.gameboard.remainingShips();
-    div.appendChild(shipText);
+    const playerText = createElement("p");
+    playerText.innerText = `You have 4 ships alive`;
+    shipText.innerText = `Computer has 4 ships alive`;
+    div.append(shipText, playerText);
     versus.innerText = "vs";
     resetMain();
     drawBoard();
     mainElem.appendChild(versus);
     drawAIBoard();
     mainElem.appendChild(div);
+}
+
+function endGameScreen(message) {
+    const div = createElement("div", "outcome-restart");
+    const p = createElement("p");
+    p.innerText = message;
+    div.appendChild(p);
+    const playAgainBtn = createElement("button", "play-again");
+    playAgainBtn.innerText = "Play Again";
+    playAgainBtn.addEventListener("click", () => {
+        resetMain();
+        overlay.classList.remove("active");
+        playerBoard = Gameboard();
+        computer = AI();
+        placeBoatsStartGame();
+        drawBoard();
+    });
+    div.appendChild(playAgainBtn);
+    overlay.classList.add("active");
+    mainElem.append(div);
 }
