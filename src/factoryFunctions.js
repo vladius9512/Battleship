@@ -128,14 +128,4 @@ function generateMove() {
     return { row: row, column: column };
 }
 
-function main() {
-    const computer = AI();
-    const player = createPlayer();
-    const move = computer.doMove();
-    player.gameboard.receiveAttack(move.row, move.column);
-    console.log(player);
-    computer.gameboard.receiveAttack(0, 0);
-    console.log(computer);
-}
-
 module.exports = { Gameboard, AI, createShip };

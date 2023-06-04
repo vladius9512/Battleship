@@ -77,7 +77,6 @@ function drawBoard() {
                     }
                 }
                 if (dragged.dataset.horizontal === "on") {
-                    console.log(shipLength);
                     if (
                         checkSquaresHorizontal(
                             boardMatrix,
@@ -182,8 +181,10 @@ function drawAIBoard() {
                     endGameScreen("Computer won! Try again!");
                 if (boardMatrix[i][j] === 1) {
                     square.classList.add("hit");
+                    square.classList.add("disabled");
                 } else {
                     square.classList.add("miss");
+                    square.classList.add("disabled");
                 }
                 attacked = true;
                 updateShipsAlive(
