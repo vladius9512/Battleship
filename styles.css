@@ -239,6 +239,10 @@ a:hover {
         margin-top: unset;
         margin-left: 1rem;
     }
+    .computer-board .row .square:not(.disabled):hover {
+        background-color: var(--purple);
+        cursor: pointer;
+    }
     #ships-alive {
         position: fixed;
         bottom: 10%;
