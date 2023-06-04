@@ -262,5 +262,5 @@ function endGameScreen(message) {
     });
     div.appendChild(playAgainBtn);
     overlay.classList.add("active");
-    mainElem.append(div);
+    overlay.append(div);
 }
